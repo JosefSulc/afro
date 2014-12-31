@@ -18,8 +18,7 @@
         $reg->input(array('type' => 'submit', 'value' => 'Register'));
         $reg->render();
 
-
-        print_r(afro::get());
+        print_r(afro::get($_POST));
         ?>
     </body>
 

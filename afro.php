@@ -1,8 +1,5 @@
 <?php
 
-session_start();
-if (!empty($_POST))
-    afro::validate();
 
 class afro {
 
@@ -15,7 +12,7 @@ class afro {
         foreach ($data as $key => $value) {
             $this->formHTML .= ' ' . $key . '="' . $value . '"';
         }
-        $this->formHTML .= ' action="afro.php">';
+        $this->formHTML .= ' action="">';
         $_SESSION['vals'] = array();
     }
 
@@ -40,17 +37,16 @@ class afro {
             $this->formHTML .= ' /><br>';
     }
 
-    public static function validate() {
-        $data = array();
+    public static function validate($data) {
         $val_types = $_SESSION['vals'];
-
-        foreach ($_POST as $key => $post) {
+        echo '<br>';
+        
+        foreach($data as $key => $post) {
             $data[$key] = afro::filter($post, $val_types[$key]);
         }
 
-        $_SESSION['form'] = $data;
-        header('Location: index.php');
-        exit();
+        return $data;
+        
     }
 
     public static function filter($data, $type) {
@@ -75,15 +71,12 @@ class afro {
         return $data;
     }
 
-    public static function get() {
+    public static function get($data = false) {
 
-        if (isset($_SESSION['form'])) {
-            $form = $_SESSION['form'];
-            unset($_SESSION['form']);
-            return $form;
-        } else {
-            return;
-        }
+        if($data != false) return afro::validate($data);
+        
     }
 
 }
+
+
