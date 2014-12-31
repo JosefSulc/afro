@@ -12,10 +12,10 @@
         require 'afro.php';
 
 
-        $reg = new afro(array('method' => 'POST', 'id' => 'reg'));
-        $reg->input(array('name' => 'user', 'placeholder' => 'UserName', 'validate' => 'string'));
-        $reg->input(array('name' => 'pass', 'type' => 'password', 'placeholder' => 'password', 'validate' => 'string'));
-        $reg->input(array('type' => 'submit', 'value' => 'Register'));
+        $reg = new afro(array('id' => 'reg'));
+        $reg->input('username');
+        $reg->input('password');
+        $reg->input(array('name'=>'remember','type'=>'checkbox','value'=>'remember','label-r'=>'Remember me'));
         $reg->render();
 
         print_r(afro::get($_POST));
