@@ -50,6 +50,7 @@ class afro {
 
         $_SESSION['form'] = $data;
         header('Location: index.php');
+        exit();
     }
 
     public static function filter($data, $type) {
