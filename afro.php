@@ -78,7 +78,7 @@ class afro {
 
         if (isset($_SESSION['form'])) {
             $form = $_SESSION['form'];
-            session_destroy();
+            unset($_SESSION['form']);
             return $form;
         } else {
             return;
