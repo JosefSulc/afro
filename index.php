@@ -7,21 +7,21 @@
     </head>
 
 
+    <body>
+        <?php
+        require 'afro.php';
 
-    <?php
-    require 'afro.php';
+
+        $reg = new afro(array('method' => 'POST', 'id' => 'reg'));
+        $reg->input(array('name' => 'user', 'placeholder' => 'UserName', 'validate' => 'string'));
+        $reg->input(array('name' => 'pass', 'type' => 'password', 'placeholder' => 'password', 'validate' => 'string'));
+        $reg->input(array('type' => 'submit', 'value' => 'Register'));
+        $reg->render();
 
 
-    $reg = new afro(array('method' => 'POST', 'id' => 'reg'));
-    $reg->input(array('name' => 'user', 'placeholder' => 'UserName','validate' => 'string'));
-    $reg->input(array('name' => 'pass', 'type' => 'password', 'placeholder' => 'password','validate'=>'string'));
-    $reg->input(array('type' => 'submit', 'value' => 'Register'));
-    $reg->render();
-    
-    
-    print_r(afro::get());
-    
-    ?>
+        print_r(afro::get());
+        ?>
+    </body>
 
 
 
