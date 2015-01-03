@@ -1,19 +1,16 @@
 <?php
 
-
 class afro {
 
     private $formHTML;
 
-    public function __construct($data) {
-        if (!isset($data['method']))
-            $data['method'] = 'POST';
-        $this->formHTML = '<form';
-        foreach ($data as $key => $value) {
-            $this->formHTML .= ' ' . $key . '="' . $value . '"';
-        }
-        $this->formHTML .= ' action="">';
-        $_SESSION['vals'] = array();
+    public function __construct($formName) {
+        $this->formName = $formName;
+
+        $this->formHTML = '<form id="' . $formName . '" method="POST" action="">';
+        if (!isset($_SESSION['vals']))
+            $_SESSION['vals'] = array();
+        $_SESSION['formNames'][] = $formName;
     }
 
     public function render() {
@@ -21,35 +18,68 @@ class afro {
     }
 
     public function input($data) {
-        if (isset($data['label-l']))
-            $this->formHTML .= '<label>' . $data['label-l'] . '</label>';
-        if (isset($data['validate']))
-            $_SESSION['vals'][$data['name']] = $data['validate'];
+        $data = $this->prepared($data);
 
+        if (isset($data['validate'])) {
+            $_SESSION['vals'][$data['name']] = $data['validate'];
+            unset($data['validate']);
+        }
         $this->formHTML .= '<input';
+
         foreach ($data as $key => $value) {
             $this->formHTML .= ' ' . $key . '="' . $value . '"';
         }
-
-        if (isset($data['label-r']))
-            $this->formHTML .= ' /><label>' . $data['label-r'] . '</label><br>';
-        else
-            $this->formHTML .= ' /><br>';
+        $this->formHTML .= ' />';
+    }
+    
+    public function label($data)
+    {
+        $this->formHTML .= '<label>'.$data.'</label>';
+        
+    }
+    
+    public function br()
+    {
+        $this->formHTML .= '<br>';
     }
 
-    public static function validate($data) {
+    public function prepared($data) {
+        switch ($data):
+            case('username'):
+                $data = array('id' => 'username', 'type' => 'text', 'name' => 'username', 'placeholder' => 'username', 'validate' => 'string');
+                return $data;
+            case('password'):
+                $data = array('id' => 'password', 'name' => 'password', 'type' => 'password', 'placeholder' => 'password', 'validate' => 'string');
+                return $data;
+            case('email'):
+                $data = array('id' => 'email', 'name' => 'email', 'type' => 'text', 'placeholder' => 'email', 'validate' => 'email');
+                return $data;
+            case('message'):
+                $data = array('id' => 'message', 'name' => 'message', 'type' => 'text', 'placeholder' => 'message', 'validate' => 'string');
+                return $data;
+            case('number'):
+                $data = array('id' => 'number', 'name' => 'number', 'type' => 'number', 'validate' => 'integer');
+                return $data;
+            case('submit'):
+                $data = array('id' => 'submit', 'type' => 'submit', 'value' => 'submit');
+                return $data;
+            default:
+                return $data;
+        endswitch;
+    }
+
+    public static function filter_inputs($data) {
         $val_types = $_SESSION['vals'];
-        echo '<br>';
-        
-        foreach($data as $key => $post) {
+        foreach ($data as $key => $post) {
             $data[$key] = afro::filter($post, $val_types[$key]);
         }
 
         return $data;
-        
     }
 
     public static function filter($data, $type) {
+
+
         switch ($type) {
             case('string'):
                 $data = filter_var($data, FILTER_SANITIZE_STRING);
@@ -71,12 +101,10 @@ class afro {
         return $data;
     }
 
-    public static function get($data = false) {
+    public static function sanitize($data = false) {
 
-        if($data != false) return afro::validate($data);
-        
+        if ($data != false)
+            return afro::filter_inputs($data);
     }
 
 }
-
-
