@@ -14,7 +14,7 @@ class afro {
     }
 
     public function render() {
-        echo $this->formHTML . '</form>';
+        return $this->formHTML . '</form>';
     }
 
     public function input($data) {

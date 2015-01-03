@@ -12,7 +12,8 @@
         $reg->label('Remember me');
         $reg->br();
         $reg->input('submit');
-        $reg->render();
+        $form = $reg->render();
+        echo $form;
         
         print_r(afro::sanitize($_POST));
         
