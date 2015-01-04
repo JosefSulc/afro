@@ -4,9 +4,9 @@
 
 
         $reg = new afro('user');
-        $reg->add('name:username,type:text,placeholder:insert your name here,validation:string,br');
-        $reg->add('.password.,placeholder:insert your password,br');
-        $reg->add('.number.,br');
+        $reg->add('name:username,type:text,placeholder:insert your name here,validation:string',true);
+        $reg->add('.password.,placeholder:insert your password',true);
+        $reg->add('.number.',true);
         $reg->add('.submit.');
         $form = $reg->render();
         echo $form;

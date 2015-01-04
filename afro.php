@@ -17,21 +17,14 @@ class afro {
         return $this->formHTML . '</form>';
     }
 
-    public function add($data) {
+    public function add($data,$break = false) {
        if (preg_match('~[.](.+?)[.]~', $data, $prep)) {
            $data = $this->prepared($prep[0]) . ',' . $data;
         }
         $data = explode(',', $data);
-        $break = false;
-
         foreach ($data as $key => $val) {
             unset($data[$key]);
-            if ($val == 'br') {
-                $break = true;
-                continue;
-            }
-
-
+            
             $val = explode(':', $val);
             if (!isset($val[1])) {
                 unset($data[$key]);
