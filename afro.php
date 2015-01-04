@@ -17,12 +17,41 @@ class afro {
         return $this->formHTML . '</form>';
     }
 
-    public function input($data) {
-        $data = $this->prepared($data);
+    public function add($data) {
+       if (preg_match('~[.](.+?)[.]~', $data, $prep)) {
+           $data = $this->prepared($prep[0]) . ',' . $data;
+        }
+        $data = explode(',', $data);
+        $break = false;
+
+        foreach ($data as $key => $val) {
+            unset($data[$key]);
+            if ($val == 'br') {
+                $break = true;
+                continue;
+            }
+
+
+            $val = explode(':', $val);
+            if (!isset($val[1])) {
+                unset($data[$key]);
+                continue;
+            }
+
+            $data[$val[0]] = $val[1];
+        }
+
+        $this->input($data, $break);
+    }
+
+    private function input($data, $break) {
+
 
         if (isset($data['validate'])) {
             $_SESSION['vals'][$data['name']] = $data['validate'];
             unset($data['validate']);
+        } elseif ($data['type'] != 'submit') {
+            $_SESSION['vals'][$data['name']] = 'string';
         }
         $this->formHTML .= '<input';
 
@@ -30,38 +59,34 @@ class afro {
             $this->formHTML .= ' ' . $key . '="' . $value . '"';
         }
         $this->formHTML .= ' />';
+
+        if ($break === true)
+            $this->formHTML .= '<br>';
     }
-    
-    public function label($data)
-    {
-        $this->formHTML .= '<label>'.$data.'</label>';
-        
-    }
-    
-    public function br()
-    {
-        $this->formHTML .= '<br>';
+
+    public function label($data) {
+        $this->formHTML .= '<label>' . $data . '</label>';
     }
 
     public function prepared($data) {
         switch ($data):
-            case('username'):
-                $data = array('id' => 'username', 'type' => 'text', 'name' => 'username', 'placeholder' => 'username', 'validate' => 'string');
+            case('.username.'):
+                $data = 'id:username,type:text,name:username,placeholder:username,validate:string';
                 return $data;
-            case('password'):
-                $data = array('id' => 'password', 'name' => 'password', 'type' => 'password', 'placeholder' => 'password', 'validate' => 'string');
+            case('.password.'):
+                $data = 'id:password,name:password,type:password,placeholder:password,validate:string';
                 return $data;
-            case('email'):
-                $data = array('id' => 'email', 'name' => 'email', 'type' => 'text', 'placeholder' => 'email', 'validate' => 'email');
+            case('.email.'):
+                $data = 'id:email,name:email,type:text,placeholder:email,validate:email';
                 return $data;
-            case('message'):
-                $data = array('id' => 'message', 'name' => 'message', 'type' => 'text', 'placeholder' => 'message', 'validate' => 'string');
+            case('.message.'):
+                $data = 'id:message,name:message,type:text,placeholder:message,validate:string';
                 return $data;
-            case('number'):
-                $data = array('id' => 'number', 'name' => 'number', 'type' => 'number', 'validate' => 'integer');
+            case('.number.'):
+                $data = 'id:number,name:number,type:number,validate:integer';
                 return $data;
-            case('submit'):
-                $data = array('id' => 'submit', 'type' => 'submit', 'value' => 'submit');
+            case('.submit.'):
+                $data = 'id:submit,type:submit,value:submit';
                 return $data;
             default:
                 return $data;
@@ -70,6 +95,7 @@ class afro {
 
     public static function filter_inputs($data) {
         $val_types = $_SESSION['vals'];
+
         foreach ($data as $key => $post) {
             $data[$key] = afro::filter($post, $val_types[$key]);
         }
@@ -102,7 +128,6 @@ class afro {
     }
 
     public static function sanitize($data = false) {
-
         if ($data != false)
             return afro::filter_inputs($data);
     }

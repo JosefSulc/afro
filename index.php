@@ -4,19 +4,18 @@
 
 
         $reg = new afro('user');
-        $reg->input('username');
-        $reg->br();
-        $reg->input('password');
-        $reg->br();
-        $reg->input(array('name' => 'remember', 'type' => 'checkbox', 'value' => 'remember', 'label-r' => 'Remember me'));
-        $reg->label('Remember me');
-        $reg->br();
-        $reg->input('submit');
+        $reg->add('name:username,type:text,placeholder:insert your name here,validation:string,br');
+        $reg->add('.password.,placeholder:insert your password,br');
+        $reg->add('.number.,br');
+        $reg->add('.submit.');
         $form = $reg->render();
         echo $form;
         
         print_r(afro::sanitize($_POST));
         
         
+        ?>
+
+
         
 
