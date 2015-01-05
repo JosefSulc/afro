@@ -120,9 +120,11 @@ class afro {
         return $data;
     }
 
-    public static function get($data = false) {
-        if ($data != false)
-            return afro::filter_inputs($data);
+    public static function get() {
+        
+       
+         if (isset($_POST))
+            return afro::filter_inputs($_POST);
     }
 
 }
