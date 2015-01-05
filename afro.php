@@ -5,8 +5,7 @@ class afro {
     private $formHTML;
 
     public function __construct($formName) {
-        $this->formName = $formName;
-
+       
         $this->formHTML = '<form id="' . $formName . '" method="POST" action="">';
         if (!isset($_SESSION['vals']))
             $_SESSION['vals'] = array();
@@ -43,9 +42,12 @@ class afro {
         if (isset($data['validate'])) {
             $_SESSION['vals'][$data['name']] = $data['validate'];
             unset($data['validate']);
-        } elseif ($data['type'] != 'submit') {
-            $_SESSION['vals'][$data['name']] = 'string';
+        } 
+        
+        if (!isset($data['type'])) {
+            $data['type'] = 'text';
         }
+        
         $this->formHTML .= '<input';
 
         foreach ($data as $key => $value) {
@@ -63,22 +65,22 @@ class afro {
 
     public function prepared($data) {
         switch ($data):
-            case('.username.'):
+            case '.username.':
                 $data = 'id:username,type:text,name:username,placeholder:username,validate:string';
                 return $data;
-            case('.password.'):
+            case '.password.':
                 $data = 'id:password,name:password,type:password,placeholder:password,validate:string';
                 return $data;
-            case('.email.'):
+            case '.email.':
                 $data = 'id:email,name:email,type:text,placeholder:email,validate:email';
                 return $data;
-            case('.message.'):
+            case '.message.':
                 $data = 'id:message,name:message,type:text,placeholder:message,validate:string';
                 return $data;
-            case('.number.'):
+            case '.number.':
                 $data = 'id:number,name:number,type:number,validate:integer';
                 return $data;
-            case('.submit.'):
+            case '.submit.':
                 $data = 'id:submit,type:submit,value:submit';
                 return $data;
             default:
