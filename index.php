@@ -12,7 +12,7 @@ $reg->add('.submit.');
 $form = $reg->render();
 echo $form;
 
-print_r(afro::sanitize($_POST));
+print_r(afro::get($_POST));
 
 
 

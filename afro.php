@@ -120,7 +120,7 @@ class afro {
         return $data;
     }
 
-    public static function sanitize($data = false) {
+    public static function get($data = false) {
         if ($data != false)
             return afro::filter_inputs($data);
     }
