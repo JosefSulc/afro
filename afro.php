@@ -39,10 +39,10 @@ class afro {
             $data[$val[0]] = $val[1];
         }
 
-        $this->input($data, $break);
+        $this->assign($data, $break);
     }
 
-    private function input($data, $break) {
+    private function assign($data, $break) {
 
         if (isset($data['validate'])) {
             $this->vals[$data['name'] . '{' . $this->formName . '}'] = $data['validate'];
@@ -74,7 +74,7 @@ class afro {
     }
 
     public function prepared($data) {
-        switch ($data):
+        switch ($data) {
             case '.use.':
                 $data = 'id:username,type:text,name:username,placeholder:username,validate:string';
                 return $data;
@@ -95,7 +95,7 @@ class afro {
                 return $data;
             default:
                 return $data;
-        endswitch;
+        }
     }
 
     public function sanitize($data, $type) {
@@ -121,9 +121,8 @@ class afro {
     }
 
     public function out() {
-        if($this->formMethod === 'GET') $data = $_GET;
-        else                            $data = $_POST;
-       
+        $data = $this->formMethod == "GET" ? $_GET : $_POST;
+
         if (empty($data)) {
             return;
         }
