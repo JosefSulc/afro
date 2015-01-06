@@ -3,27 +3,32 @@
 class afro {
 
     private $formHTML;
+    private $formName;
+    private $inputNames = array();
 
     public function __construct($formName) {
-       
+        $this->formName = $formName;
         $this->formHTML = '<form id="' . $formName . '" method="POST" action="">';
         if (!isset($_SESSION['vals']))
             $_SESSION['vals'] = array();
-        $_SESSION['formNames'][] = $formName;
     }
 
-    public function render() {
-        return $this->formHTML . '</form>';
+    public function render($return = false) {
+        if ($return === true) {
+            return $this->formHTML . '</form>';
+        } else {
+            echo $this->formHTML . '</form>';
+        }
     }
 
-    public function add($data,$break = false) {
-       if (preg_match('~[.](.+?)[.]~', $data, $prep)) {
-           $data = $this->prepared($prep[0]) . ',' . $data;
+    public function add($data, $break = false) {
+        if (preg_match('~[.](.+?)[.]~', $data, $prep)) {
+            $data = $this->prepared($prep[0]) . ',' . $data;
         }
         $data = explode(',', $data);
         foreach ($data as $key => $val) {
             unset($data[$key]);
-            
+
             $val = explode(':', $val);
             if (!isset($val[1])) {
                 unset($data[$key]);
@@ -40,17 +45,22 @@ class afro {
 
 
         if (isset($data['validate'])) {
-            $_SESSION['vals'][$data['name']] = $data['validate'];
+            $_SESSION['vals'][$data['name'].'{'.$this->formName.'}'] = $data['validate'];
             unset($data['validate']);
-        } 
-        
+        }
+
         if (!isset($data['type'])) {
             $data['type'] = 'text';
         }
-        
+
         $this->formHTML .= '<input';
 
         foreach ($data as $key => $value) {
+            if($key === 'name') {
+                $value .='{'.$this->formName.'}';
+                $this->inputNames[] = $value; 
+            }
+            
             $this->formHTML .= ' ' . $key . '="' . $value . '"';
         }
         $this->formHTML .= ' />';
@@ -88,19 +98,7 @@ class afro {
         endswitch;
     }
 
-    public static function filter_inputs($data) {
-        $val_types = $_SESSION['vals'];
-
-        foreach ($data as $key => $post) {
-            $data[$key] = afro::filter($post, $val_types[$key]);
-        }
-
-        return $data;
-    }
-
-    public static function filter($data, $type) {
-
-
+    public function sanitize($data, $type) {
         switch ($type) {
             case('string'):
                 $data = filter_var($data, FILTER_SANITIZE_STRING);
@@ -122,11 +120,17 @@ class afro {
         return $data;
     }
 
-    public static function get() {
+    public function posted($return = false) {
+        if(empty($_POST)) return;
         
-       
-         if (isset($_POST))
-            return afro::filter_inputs($_POST);
+        $posted = array();
+        foreach($this->inputNames as $iName)
+        {
+            $posted[] = $this->sanitize($_POST[$iName],$_SESSION['vals'][$iName]);
+        }
+           
+        return $posted;
+            
     }
 
 }
