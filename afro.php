@@ -2,15 +2,16 @@
 
 class afro {
 
+    private $formMethod;
     private $formHTML;
     private $formName;
     private $inputNames = array();
+    private $vals = array();
 
-    public function __construct($formName) {
+    public function __construct($formName, $formMethod = 'POST') {
         $this->formName = $formName;
-        $this->formHTML = '<form id="' . $formName . '" method="POST" action="">';
-        if (!isset($_SESSION['vals']))
-            $_SESSION['vals'] = array();
+        $this->formMethod = $formMethod;
+        $this->formHTML = '<form id="' . $formName . '" method="' . $formMethod . '" action="">';
     }
 
     public function render($return = false) {
@@ -43,9 +44,8 @@ class afro {
 
     private function input($data, $break) {
 
-
         if (isset($data['validate'])) {
-            $_SESSION['vals'][$data['name'].'{'.$this->formName.'}'] = $data['validate'];
+            $this->vals[$data['name'] . '{' . $this->formName . '}'] = $data['validate'];
             unset($data['validate']);
         }
 
@@ -56,11 +56,11 @@ class afro {
         $this->formHTML .= '<input';
 
         foreach ($data as $key => $value) {
-            if($key === 'name') {
-                $value .='{'.$this->formName.'}';
-                $this->inputNames[] = $value; 
+            if ($key === 'name') {
+                $value .='{' . $this->formName . '}';
+                $this->inputNames[] = $value;
             }
-            
+
             $this->formHTML .= ' ' . $key . '="' . $value . '"';
         }
         $this->formHTML .= ' />';
@@ -120,17 +120,19 @@ class afro {
         return $data;
     }
 
-    public function posted($return = false) {
-        if(empty($_POST)) return;
-        
-        $posted = array();
-        foreach($this->inputNames as $iName)
-        {
-            $posted[] = $this->sanitize($_POST[$iName],$_SESSION['vals'][$iName]);
+    public function out() {
+        if($this->formMethod === 'GET') $data = $_GET;
+        else                            $data = $_POST;
+       
+        if (empty($data)) {
+            return;
         }
-           
+
+        $posted = array();
+        foreach ($this->inputNames as $iName) {
+            $posted[] = $this->sanitize($data[$iName], $this->vals[$iName]);
+        }
         return $posted;
-            
     }
 
 }

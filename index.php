@@ -12,7 +12,7 @@ $reg->add('.submit.');
 $reg->render();
 
 
-print_r($reg->posted());
+print_r($reg->out());
 
 
 
