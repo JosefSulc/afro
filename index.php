@@ -5,10 +5,10 @@ require 'afro.php';
 
 
 $reg = new afro('user');
-$reg->add('.username.,placeholder:insert your name here', true);
-$reg->add('.password.,placeholder:insert your password', true);
-$reg->add('.number.', true);
-$reg->add('.submit.');
+$reg->add('.use.,placeholder:insert your name here', true);
+$reg->add('.pas.,placeholder:insert your password', true);
+$reg->add('.num.', true);
+$reg->add('.sub.');
 $reg->render();
 
 

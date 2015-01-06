@@ -75,22 +75,22 @@ class afro {
 
     public function prepared($data) {
         switch ($data):
-            case '.username.':
+            case '.use.':
                 $data = 'id:username,type:text,name:username,placeholder:username,validate:string';
                 return $data;
-            case '.password.':
+            case '.pas.':
                 $data = 'id:password,name:password,type:password,placeholder:password,validate:string';
                 return $data;
-            case '.email.':
+            case '.ema.':
                 $data = 'id:email,name:email,type:text,placeholder:email,validate:email';
                 return $data;
-            case '.message.':
+            case '.mes.':
                 $data = 'id:message,name:message,type:text,placeholder:message,validate:string';
                 return $data;
-            case '.number.':
+            case '.num.':
                 $data = 'id:number,name:number,type:number,validate:integer';
                 return $data;
-            case '.submit.':
+            case '.sub.':
                 $data = 'id:submit,type:submit,value:submit';
                 return $data;
             default:
